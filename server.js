@@ -3,24 +3,25 @@ const uuid = require('./helpers/uuid');
 const express = require('express');
 const path = require('path');
 const dataList = require('./db/db.json');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
-app.get('/', (req, res) => 
-res.sendFile(path.join(__dirname, '/public/index.html'))
+app.get('/', (req, res) =>
+    res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
-app.get('/notes', (req, res) => 
-res.sendFile(path.join(__dirname, '/public/notes.html'))
+app.get('/notes', (req, res) =>
+    res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
-app.get('/api/notes', (req, res)=> {
+app.get('/api/notes', (req, res) => {
     res.json(dataList)
 });
 
@@ -41,4 +42,22 @@ app.post('/api/notes', (req, res) => {
 })
 
 
-app.listen(PORT, ()=> console.log(`listening on PORT: ${PORT}`));
+app.delete('/api/notes/:id', (req, res) => {
+    fs.readFile(dataList, 'utf8', (err, data) => {
+        const parsedData = JSON.parse(data);
+        console.log(parsedData);
+        // for (let i = 0; i < parsedData.length; i++) {
+        //     if (req.params.id === parsedData[i].id) {
+        //         delete parsedData[i];
+        //     }
+        //     fs.writeFile('./db/db.json', JSON.stringify(parsedData, null, 4), (err) =>
+        //         err ? console.error(err) : console.info(`\nData written to destination`)
+        //     );
+        // }
+
+    }
+    )
+
+})
+
+app.listen(PORT, () => console.log(`listening on PORT: ${PORT}`));

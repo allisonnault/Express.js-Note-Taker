@@ -1,5 +1,6 @@
 const fs = require('fs');
 const util = require('util');
+const dataList = require('../db/db.json')
 
 // Promise version of fs.readFile
 const readFromFile = util.promisify(fs.readFile);
@@ -31,4 +32,14 @@ const readAndAppend = (content, file) => {
   });
 };
 
-module.exports = { readFromFile, writeToFile, readAndAppend };
+const readAndDelete = () => {
+  fs.readFile(dataList, 'utf8', (err, data) => {
+ 
+      const parsedData = JSON.parse(data);
+      parsedData.push(content);
+      writeToFile(file, parsedData);
+    }
+  );
+};
+
+module.exports = { readFromFile, writeToFile, readAndAppend, readAndDelete };
