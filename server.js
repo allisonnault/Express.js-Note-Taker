@@ -23,8 +23,8 @@ app.get('/notes', (req, res) =>
 
 app.get('/api/notes', (req, res) => {
     res.json(getData())
-    //res.json(dataList)
 });
+
 function getData(){
     const raw = fs.readFileSync('./db/db.json')
     return JSON.parse(raw)
