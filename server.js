@@ -22,8 +22,13 @@ app.get('/notes', (req, res) =>
 );
 
 app.get('/api/notes', (req, res) => {
-    res.json(dataList)
+    res.json(getData())
+    //res.json(dataList)
 });
+function getData(){
+    const raw = fs.readFileSync('./db/db.json')
+    return JSON.parse(raw)
+}
 
 app.post('/api/notes', (req, res) => {
     const { title, text } = req.body;
@@ -43,18 +48,11 @@ app.post('/api/notes', (req, res) => {
 
 
 app.delete('/api/notes/:id', (req, res) => {
-    fs.readFile(dataList, 'utf8', (err, data) => {
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
         const parsedData = JSON.parse(data);
-        console.log(parsedData);
-        // for (let i = 0; i < parsedData.length; i++) {
-        //     if (req.params.id === parsedData[i].id) {
-        //         delete parsedData[i];
-        //     }
-        //     fs.writeFile('./db/db.json', JSON.stringify(parsedData, null, 4), (err) =>
-        //         err ? console.error(err) : console.info(`\nData written to destination`)
-        //     );
-        // }
-
+        const filteredData = parsedData.filter(item=> item.id !== req.params.id)
+        fs.writeFileSync('./db/db.json', JSON.stringify(filteredData, null, 4))
+        res.json('suceess')
     }
     )
 
